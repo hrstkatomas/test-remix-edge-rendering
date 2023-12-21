@@ -1,32 +1,31 @@
 import type { MetaFunction } from "@remix-run/node";
-import { Button } from "~/components/button";
-import { Link } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
+import { json } from "@remix-run/node";
+import { getScoccerEvents } from "~/utils/soccer";
+import Livetable from "~/components/livetable/Livetable";
 
 export const meta: MetaFunction = () => {
 	return [
-		{ title: "New Remix App" },
-		{ name: "description", content: "Welcome to Remix!" },
+		{ title: "Livesport home page" },
+		{ name: "description", content: "Livesport.cz home page" },
 	];
 };
 
+export const loader = async () => {
+	const events = await getScoccerEvents();
+	return json(events);
+};
+
 export default function Index() {
+	const data = useLoaderData<typeof loader>();
+
 	return (
-		<div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
-			<h1>Welcome to Remix</h1>
-
-			<ul>
-				<li>
-					<Link to={`/live`}>To Live</Link>
-				</li>
-				<li>
-					<Link to={`/league`}>To league</Link>
-				</li>
-				<li>
-					<Link to={`/events/1`}>To event 1</Link>
-				</li>
-			</ul>
-
-			<Button>Hello there</Button>
-		</div>
+		<Livetable
+			leagues={data.leagues}
+			events={data.events.map((event) => ({
+				...event,
+				startTime: new Date(event.startTime),
+			}))}
+		/>
 	);
 }
