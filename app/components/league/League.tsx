@@ -4,6 +4,8 @@ import type { EventRowType } from "../eventRow/EventRow";
 import EventRow from "../eventRow/EventRow";
 import { LeagueProvider } from "../leagueContext/LeagueContext";
 import LeagueHeader from "../leagueHeader/LeagueHeader";
+import { EventOutPortal } from "../livetable/Livetable";
+import React from "react";
 
 interface LeagueProps extends LeagueType {
 	leagueKey: number | string;
@@ -21,7 +23,7 @@ const League = ({ name, leagueKey, id, sortBy, events }: LeagueProps) => {
 				<LeagueHeader id={id} name={name} />
 				<div className="flex flex-col gap-y-2">
 					{events.map((event) => (
-						<EventRow key={event.id} {...event} />
+						<EventOutPortal key={event.id} eventId={event.id} />
 					))}
 				</div>
 			</LeagueProvider>

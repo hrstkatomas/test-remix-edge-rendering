@@ -1,8 +1,9 @@
-import type { MetaFunction } from "@remix-run/node";
+import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { json } from "@remix-run/node";
 import { getScoccerEvents } from "~/utils/soccer";
 import Livetable from "~/components/livetable/Livetable";
+import { useHydrated } from "remix-utils/use-hydrated";
 
 export const meta: MetaFunction = () => {
 	return [
@@ -11,14 +12,16 @@ export const meta: MetaFunction = () => {
 	];
 };
 
-export const loader = async () => {
+export const loader = async (params: LoaderFunctionArgs) => {
 	const events = await getScoccerEvents();
 	return json(events);
 };
 
 export default function Index() {
 	const data = useLoaderData<typeof loader>();
+	const isHydrated = useHydrated();
 
+	if (!isHydrated) return null;
 	return (
 		<Livetable
 			leagues={data.leagues}

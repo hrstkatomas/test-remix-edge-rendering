@@ -1,6 +1,7 @@
 import MyGamesIcon from "../myGamesIcon/MyGamesIcon";
 
 import type { FunctionComponent } from "react";
+import { ProgressiveClientOnly } from "~/components/progressiveClientOnly/ProgressiveClientOnly";
 export type EventRowType = {
 	id: number;
 	home: string;
@@ -21,7 +22,9 @@ const EventRow: FunctionComponent<EventRowType> = ({
 				<MyGamesIcon id={id} />
 			</div>
 			<div className="w-1/12 text-center">
-				{startTime.toLocaleTimeString("cs").replace(/:00$/, "")}
+				<ProgressiveClientOnly>
+					{startTime.toLocaleTimeString("cs").replace(/:00$/, "")}
+				</ProgressiveClientOnly>
 			</div>
 			<h3 className="w-5/12">
 				<strong>{home}</strong> - <strong>{away}</strong>
